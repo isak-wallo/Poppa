@@ -7,7 +7,7 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
 
 ## Vad appen gör
 
-- Fullskärms-himmel (mjuk gradient + stilla moln) där **högst 2 ballonger**
+- Fullskärms-himmel (mjuk gradient + stilla moln) där **högst 3 ballonger**
   (`MAX_BALLOONS`) i mjuka pastellfärger sakta stiger uppåt och vajar lite.
 - Trycker man på en ballong **poppar** den — ljudlöst och lugnt: ballongen
   krymper och tonar bort, några små bitar i samma färg glider sakta isär och

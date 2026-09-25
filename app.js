@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Inställningar för ballongerna ---
     // Allt är medvetet lugnt: få ballonger, långsam rörelse, mjuk pop.
-    const MAX_BALLOONS = 2;          // högst så här många ballonger samtidigt
+    const MAX_BALLOONS = 3;          // högst så här många ballonger samtidigt
     const RISE_SECONDS = 16;         // ungefär så lång tid tar en färd över skärmen
-    const SPAWN_DELAY_MIN = 1500;    // ms innan en ny ballong kommer (minst)
-    const SPAWN_DELAY_MAX = 3000;    // ms innan en ny ballong kommer (högst)
+    const SPAWN_DELAY_MIN = 800;     // ms innan en ny ballong kommer (minst)
+    const SPAWN_DELAY_MAX = 1800;    // ms innan en ny ballong kommer (högst)
     const POP_MS = 1400;             // hur länge pop-animationen varar
     const HIT_SLACK = 1.3;           // träffytan är lite större än ballongen (små fingrar)
     // Mjuka pastellfärger
@@ -286,8 +286,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 b.baseX = Math.min(Math.max(b.baseX, radius * 1.6), Math.max(radius * 1.6, W - radius * 1.6));
             }
             if (balloons.length === 0 && spawnTimers.length === 0) {
+                // Ballongerna kommer en i taget i början, inte alla på en gång
                 scheduleSpawn(300);
-                scheduleSpawn(rand(4000, 6000));
+                scheduleSpawn(rand(2500, 3500));
+                scheduleSpawn(rand(5000, 6500));
             }
         }
     }

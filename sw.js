@@ -1,6 +1,6 @@
 // Höj VERSION (v3 -> v4 osv.) varje gång du laddar upp nya filer,
 // så hämtas och cachas den nya versionen säkert.
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'poppa-' + VERSION;
 
 const ASSETS = [
