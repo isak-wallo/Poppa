@@ -7,14 +7,15 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
 
 ## Vad appen gör
 
-- Fullskärms-himmel (mjuk gradient + stilla moln) där **högst 3 ballonger**
-  (`MAX_BALLOONS`) i mjuka pastellfärger sakta stiger uppåt och vajar lite.
+- Fullskärms-himmel (mjuk gradient + stilla moln) där **1–4 ballonger** (högst `MAX_BALLOONS`)
+  i mjuka pastellfärger sakta stiger uppåt och vajar lite.
 - Trycker man på en ballong **poppar** den — ljudlöst och lugnt: ballongen
   krymper och tonar bort, några små bitar i samma färg glider sakta isär och
   sjunker, och snöret faller (`POP_MS`, 1,4 s). Inga poäng, inga ljud,
   inga snabba effekter — **det ska förbli lugnt och stillsamt**.
 - En ny ballong kommer efter en kort paus (`SPAWN_DELAY_MIN/MAX`). Flyger en
-  ballong ut ovanför skärmen kommer också en ny.
+  ballong ut ovanför skärmen kommer också en ny. Är himlen helt tom
+  börjar en ny ballong genast åka in nerifrån (ingen väntan).
 - Träffytan är lite större än ballongen (`HIT_SLACK`) för små fingrar.
 - Poppning sker bara vid nedtryck (touchstart), så en hand som vilar på
   skärmen poppar inte ballonger som svävar förbi. Alla fingrar kan poppa.
