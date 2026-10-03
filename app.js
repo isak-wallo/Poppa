@@ -19,8 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const RISE_SECONDS = 14;         // ungefär så lång tid tar en färd över skärmen
     const SPAWN_DELAY_MIN = 800;     // ms innan en ny ballong kommer (minst)
     const SPAWN_DELAY_MAX = 1800;    // ms innan en ny ballong kommer (högst)
-    const SPAWN_GAP_MIN = 1200;      // ms minst mellan två nya ballonger
-    const SPAWN_GAP_MAX = 4500;      // ms högst mellan två nya ballonger (slumpas)
+    const SPAWN_GAP_MIN = 200;       // ms minst mellan två nya ballonger
+    const SPAWN_GAP_MAX = 3000;      // ms högst mellan två nya ballonger (slumpas)
+    const EMPTY_PAUSE = 500;         // ms tom himmel innan en ny ballong kommer
     const POP_MS = 1400;             // hur länge pop-animationen varar
     const HIT_SLACK = 1.3;           // träffytan är lite större än ballongen (små fingrar)
     // Mjuka pastellfärger
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hålls utspridd så att det aldrig kommer flera nya på en gång.
     let spawnQueue = [];
     let lastSpawnAt = -Infinity;
+    let emptySince = null;           // när himlen blev tom (null = inte tom)
     let lastColor = null;
 
     function rand(a, b) { return a + Math.random() * (b - a); }
@@ -148,10 +150,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Uppdatering ---
     function update(dt) {
-        // Finns det inga ballonger kvar i luften ska man inte behöva vänta:
-        // då börjar en ny ballong genast åka in nerifrån.
+        // Finns det inga ballonger kvar i luften ska man inte behöva vänta
+        // länge: efter en kort stund med tom himmel börjar en ny ballong
+        // åka in nerifrån.
         const now = performance.now();
-        if (W > 0 && H > 0 && !balloons.some(b => b.state === 'flyger')) {
+        const empty = W > 0 && H > 0 && !balloons.some(b => b.state === 'flyger');
+        if (!empty) emptySince = null;
+        else if (emptySince === null) emptySince = now;
+        if (empty && now - emptySince >= EMPTY_PAUSE) {
+            emptySince = null;
             spawnBalloon(true);
             lastSpawnAt = now;
             spawnQueue.shift();      // den här ballongen ersätter den första i kön

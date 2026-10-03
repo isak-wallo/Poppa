@@ -15,7 +15,7 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
   inga snabba effekter — **det ska förbli lugnt och stillsamt**.
 - En ny ballong kommer efter en kort paus (`SPAWN_DELAY_MIN/MAX`). Flyger en
   ballong ut ovanför skärmen kommer också en ny. Är himlen helt tom
-  börjar en ny ballong genast åka in nerifrån (ingen väntan). Nya ballonger
+  börjar en ny ballong åka in nerifrån efter en kort stund (`EMPTY_PAUSE`, 0,5 s). Nya ballonger
   kommer aldrig flera på en gång: kön (`spawnQueue`) sprids ut med slumpad
   lucka (`SPAWN_GAP_MIN/MAX`), så poppar man alla fylls himlen på lite i taget.
 - Träffytan är lite större än ballongen (`HIT_SLACK`) för små fingrar.
