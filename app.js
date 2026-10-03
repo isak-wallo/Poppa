@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const RISE_SECONDS = 14;         // ungefär så lång tid tar en färd över skärmen
     const SPAWN_DELAY_MIN = 800;     // ms innan en ny ballong kommer (minst)
     const SPAWN_DELAY_MAX = 1800;    // ms innan en ny ballong kommer (högst)
+    const SPAWN_GAP_MIN = 1200;      // ms minst mellan två nya ballonger
+    const SPAWN_GAP_MAX = 4500;      // ms högst mellan två nya ballonger (slumpas)
     const POP_MS = 1400;             // hur länge pop-animationen varar
     const HIT_SLACK = 1.3;           // träffytan är lite större än ballongen (små fingrar)
     // Mjuka pastellfärger
@@ -27,7 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let W = 0, H = 0;
     let radius = 60;                 // ballongens radie i px, sätts efter skärmstorlek
     const balloons = [];
-    let spawnTimers = [];
+    // Kö med tidpunkter (performance.now) då nya ballonger ska komma.
+    // Hålls utspridd så att det aldrig kommer flera nya på en gång.
+    let spawnQueue = [];
+    let lastSpawnAt = -Infinity;
     let lastColor = null;
 
     function rand(a, b) { return a + Math.random() * (b - a); }
@@ -76,20 +81,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Sprider ut kön: varje ny ballong kommer en slumpad stund efter den
+    // förra, så poppar man alla på en gång fylls himlen på lite i taget.
+    function spreadQueue() {
+        let t = lastSpawnAt;
+        for (let i = 0; i < spawnQueue.length; i++) {
+            t = Math.max(spawnQueue[i], t + rand(SPAWN_GAP_MIN, SPAWN_GAP_MAX));
+            spawnQueue[i] = t;
+        }
+    }
+
     // Schemalägger en ny ballong efter en kort, slumpad paus.
     function scheduleSpawn(delay) {
         const d = (delay !== undefined) ? delay : rand(SPAWN_DELAY_MIN, SPAWN_DELAY_MAX);
-        const t = setTimeout(() => {
-            spawnTimers = spawnTimers.filter(x => x !== t);
-            spawnBalloon();
-        }, d);
-        spawnTimers.push(t);
+        spawnQueue.push(performance.now() + d);
+        spreadQueue();
     }
 
     // Ser till att det alltid är (eller snart blir) MAX_BALLOONS på väg.
     function fillUp() {
         const flying = balloons.filter(b => b.state === 'flyger').length;
-        const missing = MAX_BALLOONS - flying - spawnTimers.length;
+        const missing = MAX_BALLOONS - flying - spawnQueue.length;
         for (let i = 0; i < missing; i++) scheduleSpawn();
     }
 
@@ -138,8 +150,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function update(dt) {
         // Finns det inga ballonger kvar i luften ska man inte behöva vänta:
         // då börjar en ny ballong genast åka in nerifrån.
+        const now = performance.now();
         if (W > 0 && H > 0 && !balloons.some(b => b.state === 'flyger')) {
             spawnBalloon(true);
+            lastSpawnAt = now;
+            spawnQueue.shift();      // den här ballongen ersätter den första i kön
+            spreadQueue();
+        } else if (spawnQueue.length && spawnQueue[0] <= now) {
+            // Högst en ny ballong per gång, sedan sprids resten ut igen
+            spawnQueue.shift();
+            spawnBalloon();
+            lastSpawnAt = now;
+            spreadQueue();
         }
         for (let i = balloons.length - 1; i >= 0; i--) {
             const b = balloons[i];
@@ -291,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const b of balloons) {
                 b.baseX = Math.min(Math.max(b.baseX, radius * 1.6), Math.max(radius * 1.6, W - radius * 1.6));
             }
-            if (balloons.length === 0 && spawnTimers.length === 0) {
+            if (balloons.length === 0 && spawnQueue.length === 0) {
                 // Ballongerna kommer en i taget i början, inte alla på en gång.
                 // Den första kommer direkt via update() (tom himmel).
                 scheduleSpawn(rand(2500, 3500));

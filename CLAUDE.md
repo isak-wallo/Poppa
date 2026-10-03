@@ -15,7 +15,9 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
   inga snabba effekter — **det ska förbli lugnt och stillsamt**.
 - En ny ballong kommer efter en kort paus (`SPAWN_DELAY_MIN/MAX`). Flyger en
   ballong ut ovanför skärmen kommer också en ny. Är himlen helt tom
-  börjar en ny ballong genast åka in nerifrån (ingen väntan).
+  börjar en ny ballong genast åka in nerifrån (ingen väntan). Nya ballonger
+  kommer aldrig flera på en gång: kön (`spawnQueue`) sprids ut med slumpad
+  lucka (`SPAWN_GAP_MIN/MAX`), så poppar man alla fylls himlen på lite i taget.
 - Träffytan är lite större än ballongen (`HIT_SLACK`) för små fingrar.
 - Poppning sker bara vid nedtryck (touchstart), så en hand som vilar på
   skärmen poppar inte ballonger som svävar förbi. Alla fingrar kan poppa.
@@ -58,7 +60,7 @@ direkt**, utan att fråga. Commit-meddelanden på svenska.
   ballongerna — billigt på gammal platta.
 - En `requestAnimationFrame`-loop (`frame`) med tidsbaserad rörelse (`dt`,
   max 50 ms så pauser inte ger hopp).
-- Ballong-state: `'flyger'` eller `'poppar'`. `scheduleSpawn` / `fillUp`
+- Ballong-state: `'flyger'` eller `'poppar'`. `scheduleSpawn` / `fillUp` / `spawnQueue`
   ser till att det alltid finns ballonger på väg.
 
 ## Konventioner att behålla
