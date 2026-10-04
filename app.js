@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Inställningar för ballongerna ---
     // Allt är medvetet lugnt: få ballonger, långsam rörelse, mjuk pop.
-    const MAX_BALLOONS = 4;          // högst så här många ballonger samtidigt
-    const RISE_SECONDS = 14;         // ungefär så lång tid tar en färd över skärmen
+    const MAX_BALLOONS = 5;          // högst så här många ballonger samtidigt
+    const RISE_SECONDS = 16;         // ungefär så lång tid tar en färd över skärmen
     const SPAWN_DELAY_MIN = 800;     // ms innan en ny ballong kommer (minst)
     const SPAWN_DELAY_MAX = 1800;    // ms innan en ny ballong kommer (högst)
     const SPAWN_GAP_MIN = 200;       // ms minst mellan två nya ballonger
@@ -326,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scheduleSpawn(rand(2500, 3500));
                 scheduleSpawn(rand(5000, 6500));
                 scheduleSpawn(rand(7500, 9000));
+                scheduleSpawn(rand(10000, 11500));
             }
         }
     }
