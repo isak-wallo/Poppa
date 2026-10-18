@@ -443,12 +443,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showStartOverlay() {
         startOverlay.style.display = 'flex';
+        laddaOmOmNy();
+    }
+
+    // En ny version (service workern längst ner) laddas inte mitt i
+    // poppandet utan när appen döljs eller startskärmen visas.
+    let nyVersion = false;
+
+    function laddaOmOmNy() {
+        if (nyVersion) window.location.reload();
     }
 
     document.getElementById('start-btn').addEventListener('click', startApp);
 
     // --- Back-knapp: håll användaren kvar i appen ---
-    // Samma skydd som i Kludd. Bakåt får aldrig lämna sidan — i pinnat läge
+    // Samma skydd som i Kludda. Bakåt får aldrig lämna sidan — i pinnat läge
     // strandar den installerade appen annars på WebAPK:ns splash-skärm.
     // 1) Navigation API: avbryter traverseringen tyst (mest desktop-Chrome).
     // 2) Gest-armerad pushState-buffert: vid touch fylls historiken på med
@@ -538,6 +547,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener('resize', debouncedLayout);
     window.addEventListener('orientationchange', debouncedLayout);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) laddaOmOmNy();
+    });
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', debouncedLayout);
         window.visualViewport.addEventListener('scroll', debouncedLayout);
@@ -550,15 +562,24 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(fillUp, 2000);
     requestAnimationFrame(frame);
 
-    // Registrera service worker
+    // Service worker. Webbläsaren letar själv efter en ny version bara när
+    // appen startas, så den letar också när man kommer tillbaka till appen
+    // och var UPPDATERA_VAR medan den är öppen (ny version: laddaOmOmNy).
+    const UPPDATERA_VAR = 10 * 60 * 1000;
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('sw.js').then(reg => {
+            const leta = () => reg.update().catch(() => {});
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') leta();
+            });
+            setInterval(leta, UPPDATERA_VAR);
             reg.addEventListener('updatefound', () => {
                 const nw = reg.installing;
                 if (!nw) return;
                 nw.addEventListener('statechange', () => {
                     if (nw.state === 'installed' && navigator.serviceWorker.controller) {
-                        window.location.reload();
+                        nyVersion = true;
+                        if (document.hidden || startOverlay.style.display !== 'none') laddaOmOmNy();
                     }
                 });
             });

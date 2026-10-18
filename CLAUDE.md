@@ -1,7 +1,7 @@
 # Poppa — lugn ballong-app för barn
 
 En enkel PWA i samma anda och med samma grund som
-[Kludd](https://github.com/isak-wallo/Kludd). Byggd för att installeras på en
+[Kludda](https://github.com/isak-wallo/Kludda). Byggd för att installeras på en
 gammal Android-platta och användas av barn. Språk i appen och i koden
 (kommentarer, knappnamn) är **svenska**. Håll det så.
 
@@ -23,7 +23,7 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
   skärmen poppar inte ballonger som svävar förbi. Alla fingrar kan poppa.
 - Låser orientering till **landskap**, går i fullscreen, layoutlås,
   dö-yta på Android, bakåt-fälla och tyst fullscreen-återtagning — samma
-  mekanismer som i Kludd (se Kludds CLAUDE.md för detaljerna och varför).
+  mekanismer som i Kludda (se Kluddas CLAUDE.md för detaljerna och varför).
 - Fungerar **offline** som installerad PWA.
 
 ## Hosting / driftsättning
@@ -42,6 +42,9 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
 ### VIKTIGT vid uppdatering: bumpa SW-versionen
 I `sw.js` finns `const VERSION = 'vNN'`. **Höj `VERSION` varje gång du ändrar
 filer och pushar**, annars fastnar plattan på gammal cache.
+Appen letar efter en ny version när man kommer tillbaka till den och var 10:e
+minut (`UPPDATERA_VAR`), och laddar om till den först när appen döljs eller
+startskärmen visas (`laddaOmOmNy`), inte mitt i poppandet.
 
 ### Arbetsflöde
 När en ändring ska nå plattan: bumpa `VERSION`, **commit och push till `main`

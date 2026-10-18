@@ -1,6 +1,6 @@
 // Höj VERSION (v3 -> v4 osv.) varje gång du laddar upp nya filer,
 // så hämtas och cachas den nya versionen säkert.
-const VERSION = 'v6';
+const VERSION = 'v7';
 const CACHE = 'poppa-' + VERSION;
 
 const ASSETS = [
@@ -13,11 +13,15 @@ const ASSETS = [
   './icon-512.png'
 ];
 
-// Installera: cacha allt och ta över direkt
+// Installera: cacha allt och ta över direkt. Hämta förbi webbläsarens
+// HTTP-cache (cache: 'reload'), annars kan en ny version få gamla filer
+// (GitHub Pages låter dem ligga kvar i 10 minuter).
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE)
-      .then(function (c) { return c.addAll(ASSETS); })
+      .then(function (c) {
+        return c.addAll(ASSETS.map(function (u) { return new Request(u, { cache: 'reload' }); }));
+      })
       .then(function () { return self.skipWaiting(); })
   );
 });
