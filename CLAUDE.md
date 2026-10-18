@@ -36,7 +36,8 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
 - **Även på https://poppa.keiws.com** (Cloudflare, `wrangler.jsonc`). Den
   byts bara när Isak ber om det: `python verktyg/slapp.py --skarpt` publicerar
   appens filer (ASSETS i `sw.js`) från `origin/main` med wrangler och taggar
-  committen `slapp-N`. `python verktyg/slapp.py` visar vad som är släppt.
+  committen `slapp-N`. Den skarpa sidan har egna versionsnummer: i den
+  släppta `sw.js` blir `VERSION` släppnumret (v1, v2 …), oberoende av Pages. `python verktyg/slapp.py` visar vad som är släppt.
 
 ### VIKTIGT vid uppdatering: bumpa SW-versionen
 I `sw.js` finns `const VERSION = 'vNN'`. **Höj `VERSION` varje gång du ändrar
