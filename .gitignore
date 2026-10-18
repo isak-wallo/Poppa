@@ -1,0 +1,5 @@
+__pycache__/
+
+# Bygget till poppa.keiws.com (verktyg/slapp.py)
+webb/
+.wrangler/

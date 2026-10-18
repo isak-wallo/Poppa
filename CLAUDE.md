@@ -33,6 +33,10 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
   `https://isak-wallo.github.io/Poppa/`.
 - **Inget byggsteg** — filerna servas direkt. Driftsätt = commit + push till
   `main`.
+- **Även på https://poppa.keiws.com** (Cloudflare, `wrangler.jsonc`). Den
+  byts bara när Isak ber om det: `python verktyg/slapp.py --skarpt` publicerar
+  appens filer (ASSETS i `sw.js`) från `origin/main` med wrangler och taggar
+  committen `slapp-N`. `python verktyg/slapp.py` visar vad som är släppt.
 
 ### VIKTIGT vid uppdatering: bumpa SW-versionen
 I `sw.js` finns `const VERSION = 'vNN'`. **Höj `VERSION` varje gång du ändrar
@@ -51,6 +55,7 @@ direkt**, utan att fråga. Commit-meddelanden på svenska.
 | `style.css` | Fullskärmslayout. |
 | `sw.js` | Service worker (cache-first + tyst bakgrundsuppdatering). Bumpa `VERSION`. |
 | `manifest.json` | PWA-manifest (`standalone`, `landscape`). |
+| `wrangler.jsonc`, `verktyg/slapp.py` | Publiceringen till poppa.keiws.com (se Hosting). |
 | `icon-192.png`, `icon-512.png` | App-ikoner (ballong på himmel). |
 
 ## Arkitektur i `app.js`

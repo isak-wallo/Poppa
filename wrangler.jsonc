@@ -1,0 +1,11 @@
+// Poppa på poppa.keiws.com (Cloudflare Workers med statiska filer).
+// Publiceras med verktyg/slapp.py, som bygger webb/ med appens filer
+// (ASSETS i sw.js) från den pushade koden.
+{
+  "name": "poppa",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "./webb" },
+  "routes": [
+    { "pattern": "poppa.keiws.com", "custom_domain": true }
+  ]
+}
