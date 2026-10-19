@@ -1,0 +1,13 @@
+{
+  "appId": "com.keiws.poppa",
+  "appName": "Poppa",
+  "webDir": "app-webb",
+  "android": {
+    "backgroundColor": "#000000"
+  },
+  "plugins": {
+    "SystemBars": {
+      "hidden": true
+    }
+  }
+}

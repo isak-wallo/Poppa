@@ -39,6 +39,25 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
   committen `slapp-N`. Den skarpa sidan har egna versionsnummer: i den
   släppta `sw.js` blir `VERSION` släppnumret (v1, v2 …), oberoende av Pages. `python verktyg/slapp.py` visar vad som är släppt.
 
+### Android-appen (APK, Capacitor)
+Poppa finns också som Android-app från en APK-fil (inte Google Play), byggd
+precis som Kludda (se Kluddas CLAUDE.md för detaljerna och varför).
+`python verktyg/bygg_apk.py` bygger i en kopia utanför Dropbox
+(`%LOCALAPPDATA%\keiws-bygg\poppa`) och lägger APK:n i
+`C:\Dropbox\Isak\Program\AI\Claude\apk\Poppa-vNN.apk` (`versionCode` =
+numret i `VERSION`). Kör aldrig `npx cap` eller Gradle i repot.
+**Bygg en ny APK vid varje ny version** (efter push); den förra tas bort.
+- I appen (`ANDROID_APP` = `window.Capacitor` i `app.js`): ingen startskärm,
+  ingen service worker och ingen dö-yta.
+- `MainActivity.java` (samma som Kluddas): systemfälten dolda, himlen krymper
+  om de ändå syns, bakåt gör ingenting, appen fäster sig själv
+  (`startLockTask`). `AndroidManifest.xml`: `sensorLandscape`.
+- Ikonerna i `android/app/src/main/res/mipmap-*` är gjorda från `icon-512.png`.
+- Signeringsnyckeln ligger utanför repot
+  (`C:\Dropbox\Isak\Program\AI\Claude\android-nycklar`, `keiwsNycklar` i
+  `~/.gradle/gradle.properties`). Lägg den aldrig i repot.
+- Testa APK:n i emulatorn (AVD `platta`) innan den lämnas över.
+
 ### VIKTIGT vid uppdatering: bumpa SW-versionen
 I `sw.js` finns `const VERSION = 'vNN'`. **Höj `VERSION` varje gång du ändrar
 filer och pushar**, annars fastnar plattan på gammal cache.
@@ -60,6 +79,7 @@ direkt**, utan att fråga. Commit-meddelanden på svenska.
 | `sw.js` | Service worker (cache-first + tyst bakgrundsuppdatering). Bumpa `VERSION`. |
 | `manifest.json` | PWA-manifest (`standalone`, `landscape`). |
 | `wrangler.jsonc`, `verktyg/slapp.py` | Publiceringen till poppa.keiws.com (se Hosting). |
+| `android/`, `capacitor.config.json`, `package.json`, `verktyg/bygg_apk.py` | Android-appen (se Hosting). |
 | `icon-192.png`, `icon-512.png` | App-ikoner (ballong på himmel). |
 
 ## Arkitektur i `app.js`
@@ -75,6 +95,7 @@ direkt**, utan att fråga. Commit-meddelanden på svenska.
 ## Konventioner att behålla
 
 - Svenska i UI och kommentarer.
-- Ingen byggpipeline, inga dependencies — ren vanilla JS/CSS/HTML.
+- Ingen byggpipeline, inga dependencies — ren vanilla JS/CSS/HTML (npm-paketen
+  i `package.json` är bara till Android-appen).
 - Lugnt tempo: få ballonger, långsamma rörelser, mjuka övergångar, inga ljud.
 - Bumpa `VERSION` i `sw.js` vid varje ändring som ska nå plattan.

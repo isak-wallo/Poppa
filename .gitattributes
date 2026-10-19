@@ -1,0 +1,4 @@
+# Windows-skript (gradlew.bat) behöver CRLF.
+*.bat text eol=crlf
+*.jar binary
+*.png binary

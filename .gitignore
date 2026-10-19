@@ -3,3 +3,6 @@ __pycache__/
 # Bygget till poppa.keiws.com (verktyg/slapp.py)
 webb/
 .wrangler/
+# Android-appen (verktyg/bygg_apk.py)
+node_modules/
+app-webb/

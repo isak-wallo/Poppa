@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // aldrig kan råka använda dem före deklarationen.
     const startOverlay = document.getElementById('start-overlay');
     const app = document.getElementById('app');
+    // Android-appen (Capacitor, verktyg/bygg_apk.py): helskärm, vridning och
+    // bakåt sköts av appen själv, så ingen startskärm och ingen service worker.
+    const ANDROID_APP = !!window.Capacitor;
+    if (ANDROID_APP) startOverlay.style.display = 'none';
 
     // Förrenderad bakgrund (himmel + moln). Ritas om bara vid storleksändring,
     // så varje frame bara kostar en drawImage för bakgrunden.
@@ -385,7 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
             app.style.width = lockedW + 'px';
             app.style.height = lockedH + 'px';
             const isPhone = lockedH < PHONE_LANDSCAPE_MAX_H;
-            const staticPad = IS_ANDROID ? DEAD_ZONE : 0;
+            // Android-appen: systemfälten är dolda och himlen krymper själv
+            // om de syns (MainActivity.java), så ingen remsa.
+            const staticPad = IS_ANDROID && !ANDROID_APP ? DEAD_ZONE : 0;
             let dynPad = 0;
             if (window.visualViewport) {
                 const dyn = isPhone
@@ -566,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // appen startas, så den letar också när man kommer tillbaka till appen
     // och var UPPDATERA_VAR medan den är öppen (ny version: laddaOmOmNy).
     const UPPDATERA_VAR = 10 * 60 * 1000;
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && !ANDROID_APP) {
         navigator.serviceWorker.register('sw.js').then(reg => {
             const leta = () => reg.update().catch(() => {});
             document.addEventListener('visibilitychange', () => {

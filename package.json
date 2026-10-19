@@ -1,0 +1,10 @@
+{
+  "name": "poppa",
+  "private": true,
+  "description": "Poppa som Android-app (Capacitor), se verktyg/bygg_apk.py",
+  "devDependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/cli": "8.5.3",
+    "@capacitor/core": "8.5.3"
+  }
+}
