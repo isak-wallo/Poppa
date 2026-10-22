@@ -21,7 +21,9 @@ gammal Android-platta och användas av barn. Språk i appen och i koden
 - Träffytan är lite större än ballongen (`HIT_SLACK`) för små fingrar.
 - Poppning sker bara vid nedtryck (touchstart), så en hand som vilar på
   skärmen poppar inte ballonger som svävar förbi. Alla fingrar kan poppa.
-- Låser orientering till **landskap**, går i fullscreen, layoutlås,
+- Går både **stående och liggande** (ingen orienteringslåsning; vrids
+  skärmen räknas layouten om och ballongerna flyttas med i samma
+  proportioner, `resizeCanvas`). Går i fullscreen, layoutlås,
   dö-yta på Android, bakåt-fälla och tyst fullscreen-återtagning — samma
   mekanismer som i Kludda (se Kluddas CLAUDE.md för detaljerna och varför).
 - Fungerar **offline** som installerad PWA.
@@ -51,7 +53,8 @@ numret i `VERSION`). Kör aldrig `npx cap` eller Gradle i repot.
   ingen service worker och ingen dö-yta.
 - `MainActivity.java` (samma som Kluddas): systemfälten dolda, himlen krymper
   om de ändå syns, bakåt gör ingenting, appen fäster sig själv
-  (`startLockTask`). `AndroidManifest.xml`: `sensorLandscape`.
+  (`startLockTask`). `AndroidManifest.xml`: `fullUser` (alla fyra
+  lägena, följer plattans autorotering).
 - Ikonerna i `android/app/src/main/res/mipmap-*` är gjorda från `icon-512.png`.
 - Signeringsnyckeln ligger utanför repot
   (`C:\Dropbox\Isak\Program\AI\Claude\android-nycklar`, `keiwsNycklar` i
@@ -77,7 +80,7 @@ direkt**, utan att fråga. Commit-meddelanden på svenska.
 | `app.js` | All logik: ballonger, pop, animationsloop, layout, fullscreen, bakåt-fälla, SW-registrering. |
 | `style.css` | Fullskärmslayout. |
 | `sw.js` | Service worker (cache-first + tyst bakgrundsuppdatering). Bumpa `VERSION`. |
-| `manifest.json` | PWA-manifest (`standalone`, `landscape`). |
+| `manifest.json` | PWA-manifest (`standalone`, `any`). |
 | `wrangler.jsonc`, `verktyg/slapp.py` | Publiceringen till poppa.keiws.com (se Hosting). |
 | `android/`, `capacitor.config.json`, `package.json`, `verktyg/bygg_apk.py` | Android-appen (se Hosting). |
 | `icon-192.png`, `icon-512.png` | App-ikoner (ballong på himmel). |

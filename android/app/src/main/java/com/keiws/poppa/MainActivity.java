@@ -14,8 +14,8 @@ import com.getcapacitor.BridgeActivity;
 
 // Poppa som app: helskärm (systemfälten dolda, de glider fram en stund vid
 // svep från kanten), bakåt gör ingenting, appen fäster sig själv
-// (skärmfästning) och vridningen är låst i AndroidManifest.xml
-// (sensorLandscape).
+// (skärmfästning). Appen går både stående och liggande och följer
+// plattans autorotering (fullUser i AndroidManifest.xml).
 public class MainActivity extends BridgeActivity {
     // Fästningen efterfrågas en gång varje gång appen kommer fram (inte igen
     // om man svarat nej, förrän appen lämnats och öppnats igen).

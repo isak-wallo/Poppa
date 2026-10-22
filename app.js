@@ -316,6 +316,15 @@ document.addEventListener('DOMContentLoaded', () => {
         if (skyCanvas.width !== w || skyCanvas.height !== h) {
             skyCanvas.width = w;
             skyCanvas.height = h;
+            // Vriden skärm (stående <-> liggande): ballongerna flyttas med i
+            // samma proportioner, så de varken hoppar ut eller hamnar långt ner.
+            if (W > 0 && H > 0) {
+                for (const b of balloons) {
+                    b.baseX *= w / W;
+                    b.y *= h / H;
+                    b.speed *= h / H;
+                }
+            }
             W = w;
             H = h;
             radius = Math.max(30, Math.min(W, H) * 0.11);
@@ -505,19 +514,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, { capture: true, passive: true });
 
-    // Lås orientering till landskap. Biter bara i helskärm eller installerad
-    // app — nytt försök görs varje gång helskärm tas.
-    function lockOrientation() {
-        if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape').catch(() => {});
-        }
-    }
-    lockOrientation();
+    // Poppa går både stående och liggande, så orienteringen låses inte.
+    // Vrids skärmen räknas layouten om (applyLayout) och himlen ritas om.
 
     document.addEventListener('fullscreenchange', () => {
         if (document.fullscreenElement) {
             startOverlay.style.display = 'none';
-            lockOrientation();
         } else if (!isInstalledApp()) {
             // Webbläsarläge: startskärmen är enda vägen tillbaka till
             // fullscreen. Installerad app återtar fullscreen tyst vid nästa touch.
